@@ -58,7 +58,7 @@ class _view(View):
 		self.next.disabled = (self.current_page + 1 == len(self.pages))
 		self.previous.disabled = (self.current_page <= 0)
 
-		kwargs = {'content': self.pages[self.current_page]} if not (self.embeded) else {'embed': self.pages[self.current_page]}
+		kwargs = {'content': self.pages[self.current_page]['content']} if not (self.embeded) else {'embed': self.pages[self.current_page]['content']}
 		kwargs['view'] = self
 
 		await interaction.response.edit_message(**kwargs)
@@ -124,7 +124,7 @@ class Paginator:
 		if (quick_navigation):
 			options = []
 			for index, page in enumerate(self.pages):
-				options.append(SelectOption(label=f"Page {index+1}", value=index))
+				options.append(SelectOption(label=page['label'], value=index))
 
 			view.add_item(_select(options))
 
@@ -132,7 +132,7 @@ class Paginator:
 			for child in self.custom_children:
 				view.add_item(child)
 
-		kwargs = {'content': self.pages[view.current_page]} if not (embeded) else {'embed': self.pages[view.current_page]}
+		kwargs = {'content': self.pages[view.current_page]['content']} if not (embeded) else {'embed': self.pages[view.current_page]['content']}
 		kwargs['view'] = view
 
 		if (followup):
@@ -142,4 +142,4 @@ class Paginator:
 
 		await view.wait()
 		
-		await self.interaction.delete_original_message()
+		await self.interaction.delete_original_response()
